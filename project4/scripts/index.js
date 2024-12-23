@@ -1,12 +1,12 @@
 // @todo: Темплейт карточки
-
+//Шаблон карточки и его элементы
 const template = document.getElementById('card-template').content
 const templateImg = template.querySelector('.card__image')
 const templateTitle = template.querySelector('.card__title')
 
 // @todo: DOM узлы
 
-const cardList = document.querySelector('.places__list')
+const cardList = document.querySelector('.places__list') //контейнер для карточки
 
 const cards = cardList.querySelectorAll('.card')
 
@@ -76,10 +76,12 @@ initialCards.map(({ name, link }) => renderCard(name, link))
 
 const openModal = popup => {
 	popup.classList.add('popup_is-opened')
+	document.addEventListener('keydown', closeByEsc)
 }
 
 const closeModal = popup => {
 	popup.classList.remove('popup_is-opened')
+	document.removeEventListener('keydown', closeByEsc)
 }
 
 profileEditButton.addEventListener('click', () => openModal(profilePopup))
@@ -88,8 +90,18 @@ profileAddButton.addEventListener('click', () => openModal(cardPopup))
 popups.forEach(popup => {
 	const buttonClose = popup.querySelector('.popup__close')
 	buttonClose.addEventListener('click', () => closeModal(popup))
+	popup.addEventListener('mousedown', function (e) {
+		if (e.target.classList.contains('popup')) closeModal(popup)
+	})
 	popup.classList.add('popup_is-animated')
 })
+
+function closeByEsc(evt) {
+	if (evt.key === 'Escape') {
+		const openedPopup = document.querySelector('.popup_is-opened')
+		closeModal(openedPopup)
+	}
+}
 
 nameInputProfilePopup.value = profileName.textContent
 descriptInputProfilePopup.value = profileDescript.textContent
